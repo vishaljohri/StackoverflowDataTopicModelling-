@@ -4,10 +4,13 @@ from bs4 import BeautifulSoup
 
 
 def remove_codeSnippets():
-    inPath = 'G:\StackoverflowData\DataPreprocessing\OriginalFiles\src\*'
-    outPath = 'G:\StackoverflowData\DataPreprocessing\RemovedTagsAndSnippets\\'
+    inPath = 'C:\Users\VISHAL\workspace\StackOverFlow\src\*'
+    outPath = 'G:\StackoverflowData\DataPreprocessing\ProcessedDataOnlyBody\RemovedSnippetsAndTags\\'
     files = glob.glob(inPath)
+    count = 0;
     for fileName in files:
+        count += 1
+        print "File no = ", count
         actualName = fileName.split('\\')
         print actualName[-1]
         with open(fileName) as f:
