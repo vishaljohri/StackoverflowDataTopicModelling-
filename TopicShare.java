@@ -47,13 +47,13 @@ public class TopicShare {
 		}
 	}
 
-	void calTopicProportion() {
+	void calTopicSharePerDocument() {
 		for (int i = 0; i < noTopics; i++) {
 			topicShare[i] = topicShare[i] / noDocs;
 		}
 		// write output
 		try {
-			File fileOutput = new File("Final_TopicShare.txt");
+			File fileOutput = new File("TopicSharePerDocument.txt");
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					fileOutput));
 			for (int i = 0; i < noTopics; i++) {
@@ -65,11 +65,34 @@ public class TopicShare {
 			e.printStackTrace();
 		}
 	}
+	
+	void calcTopicShareAcrossTopics() {
+		double sum = 0;
+		double totalPerc = 0;
+		for (int i = 0; i < noTopics; i++) {
+			sum += topicShare[i];
+		}
+		try {
+			File fileOutput = new File("TopicShareAcrossTopics.txt");
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
+					fileOutput));
+			for (int i = 0; i < noTopics; i++) {
+				bufferedWriter.write(String.valueOf((topicShare[i] / sum) * 100) + "%");
+				totalPerc += (topicShare[i] / sum) * 100;
+				bufferedWriter.newLine();
+			}
+			bufferedWriter.write("Total Percentage = " + String.valueOf(totalPerc) + "%");
+			bufferedWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) {
 		TopicShare ts = new TopicShare(30, 489907);
-		ts.calcTopicAggregate("doc-topics-30");
-		ts.calTopicProportion();
+		ts.calcTopicAggregate("doc-topics-30-May18");
+		ts.calTopicSharePerDocument();
+		ts.calcTopicShareAcrossTopics();
 	}
 
 }
