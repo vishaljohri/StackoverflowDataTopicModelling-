@@ -32,7 +32,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 			//test optimization
 			start = iter * noRows;
 			ResultSet rs = st
-					.executeQuery("select Id, PostTypeId, ParentId, Body, Title, Tags, LastActivityDate from posts LIMIT "
+					.executeQuery("select Id, PostTypeId, ParentId, Body, Title, Tags, CreationDate from posts LIMIT "
 							+ start + "," + noRows);
 			if (!rs.next()) {
 			    System.out.println("done with all the data");
@@ -46,7 +46,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 			while (rs.next()) {
 				System.out.println("Sequence No = " + count++ + " and id = "
 						+ rs.getString("Id"));
-				String lastActivity[] = rs.getString("LastActivityDate").split(
+				String lastActivity[] = rs.getString("CreationDate").split(
 						"\\s+");
 				String fullDate[] = lastActivity[0].split("-");
 				String monthWithYear = fullDate[0] + "-" + fullDate[1];
