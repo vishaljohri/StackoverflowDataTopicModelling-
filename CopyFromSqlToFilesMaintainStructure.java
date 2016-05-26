@@ -45,6 +45,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 				rs.close();
 				break;
 			}
+			rs.beforeFirst();
 			System.out.println(rs);
 			// rs.setFetchSize(100);
 
