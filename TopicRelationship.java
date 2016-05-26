@@ -50,14 +50,14 @@ public class TopicRelationship {
 
 			while (rs.next()) {
 				System.out.println("Sequence No = " + count++ + " and id = "
-						+ rs.getString("Document_Id"));
+						+ rs.getInt("Document_Id"));
 
 				int parent = rs.getInt("Parent_Id");
 				ps.setInt(1, parent);
 				ResultSet rq = ps.executeQuery();
 				if (!rq.next()) {
 					System.out.println("question post not present for: "
-							+ rs.getString("Document_Id"));
+							+ rs.getInt("Document_Id"));
 					rq.close();
 					continue;
 				}
