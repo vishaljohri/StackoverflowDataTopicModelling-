@@ -45,13 +45,15 @@ public class LoadTopicPropToSQL {
 
 		// Create table for Question Topics
 		String queryQuestion = "CREATE TABLE QuestionTopic("
-				+ "Document_Id INT NOT NULL, ";
+				+ "Document_Id INT NOT NULL, "
+				+ "CreationMonth VARCHAR(10) NOT NULL, ";
 		String fullQueryQuestion = formQueryForTopics(queryQuestion);
 		st.executeUpdate(fullQueryQuestion);
 
 		// Create table for Answer Topics
 		String queryAnswer = "CREATE TABLE AnswerTopic("
-				+ "Document_Id INT NOT NULL, " + "Parent_Id INT, ";
+				+ "Document_Id INT NOT NULL, " + "Parent_Id INT, "
+				+ "CreationMonth VARCHAR(10) NOT NULL, ";
 		String fullQueryAnswer = formQueryForTopics(queryAnswer);
 		st.executeUpdate(fullQueryAnswer);
 
@@ -68,19 +70,19 @@ public class LoadTopicPropToSQL {
 			String fullName[] = str[1].split("/");
 			String name = fullName[fullName.length - 1];
 			name = name.substring(0, name.length() - 4);
+			String s[] = name.split("_");
 			// question post
-			if (!name.contains("_")) {
+			if (s.length == 2) {
 				String insertQueryQuestionPrefix = "INSERT INTO QuestionTopic "
-						+ "VALUES ( " + name + ", ";
+						+ "VALUES ( " + s[0] + ", " + s[1] + ", ";
 				String fullInsertQueryQuestion = formCompleteInsertQuery(
 						insertQueryQuestionPrefix, str);
 				st.executeUpdate(fullInsertQueryQuestion);
 			}
 			// Answer post
 			else {
-				String s[] = name.split("_");
 				String insertQueryAnswerPrefix = "INSERT INTO AnswerTopic "
-						+ "VALUES ( " + s[0] + ", " + s[1] + ", ";
+						+ "VALUES ( " + s[0] + ", " + s[1] + ", " + s[2] + ", ";
 				String fullInsertQueryAnswer = formCompleteInsertQuery(
 						insertQueryAnswerPrefix, str);
 				st.executeUpdate(fullInsertQueryAnswer);
