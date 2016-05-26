@@ -7,12 +7,12 @@ import java.io.FileWriter;
 public class TopicShare {
 	double topicShare[];
 	int noTopics;
-	int noDocs;
+	long noDocs;
 
-	public TopicShare(int noTopics, int noDocs) {
+	public TopicShare(int noTopics) {
 		this.noTopics = noTopics;
 		this.topicShare = new double[this.noTopics];
-		this.noDocs = noDocs;
+		this.noDocs = 0;
 	}
 
 	void calcTopicAggregate(String fileName) {
@@ -30,6 +30,7 @@ public class TopicShare {
 					}
 				}
 				System.out.println(thisLine);
+				noDocs++;
 			}
 			bufferedReader.close();
 
@@ -89,8 +90,8 @@ public class TopicShare {
 	}
 
 	public static void main(String[] args) {
-		TopicShare ts = new TopicShare(30, 489907);
-		ts.calcTopicAggregate("doc-topics-30-May18");
+		TopicShare ts = new TopicShare(40);
+		ts.calcTopicAggregate("topic-docs-23-May");
 		ts.calTopicSharePerDocument();
 		ts.calcTopicShareAcrossTopics();
 	}
