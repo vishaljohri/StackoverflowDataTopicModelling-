@@ -74,7 +74,8 @@ public class LoadTopicPropToSQL {
 			// question post
 			if (s.length == 2) {
 				String insertQueryQuestionPrefix = "INSERT INTO QuestionTopic "
-						+ "VALUES ( " + s[0] + ", " + s[1] + ", ";
+						+ "VALUES ( " + Integer.parseInt(s[0]) + ", " + s[1]
+						+ ", ";
 				String fullInsertQueryQuestion = formCompleteInsertQuery(
 						insertQueryQuestionPrefix, str);
 				st.executeUpdate(fullInsertQueryQuestion);
@@ -82,7 +83,8 @@ public class LoadTopicPropToSQL {
 			// Answer post
 			else {
 				String insertQueryAnswerPrefix = "INSERT INTO AnswerTopic "
-						+ "VALUES ( " + s[0] + ", " + s[1] + ", " + s[2] + ", ";
+						+ "VALUES ( " + Integer.parseInt(s[0]) + ", "
+						+ Integer.parseInt(s[1]) + ", " + s[2] + ", ";
 				String fullInsertQueryAnswer = formCompleteInsertQuery(
 						insertQueryAnswerPrefix, str);
 				st.executeUpdate(fullInsertQueryAnswer);
