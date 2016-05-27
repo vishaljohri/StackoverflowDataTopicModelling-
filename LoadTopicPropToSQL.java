@@ -74,8 +74,8 @@ public class LoadTopicPropToSQL {
 			// question post
 			if (s.length == 2) {
 				String insertQueryQuestionPrefix = "INSERT INTO QuestionTopic "
-						+ "VALUES ( " + Integer.parseInt(s[0]) + ", " + s[1]
-						+ ", ";
+						+ "VALUES ( " + Integer.parseInt(s[0]) + ", " + "'"
+						+ s[1] + "'" + ", ";
 				String fullInsertQueryQuestion = formCompleteInsertQuery(
 						insertQueryQuestionPrefix, str);
 				st.executeUpdate(fullInsertQueryQuestion);
@@ -84,7 +84,8 @@ public class LoadTopicPropToSQL {
 			else {
 				String insertQueryAnswerPrefix = "INSERT INTO AnswerTopic "
 						+ "VALUES ( " + Integer.parseInt(s[0]) + ", "
-						+ Integer.parseInt(s[1]) + ", " + s[2] + ", ";
+						+ Integer.parseInt(s[1]) + ", " + "'" + s[2] + "'"
+						+ ", ";
 				String fullInsertQueryAnswer = formCompleteInsertQuery(
 						insertQueryAnswerPrefix, str);
 				st.executeUpdate(fullInsertQueryAnswer);
@@ -98,6 +99,6 @@ public class LoadTopicPropToSQL {
 	public static void main(String[] args) throws ClassNotFoundException,
 			SQLException, IOException {
 		LoadTopicPropToSQL lp = new LoadTopicPropToSQL(40);
-		lp.loadTopicPropSQL("topic-docs-23-May");
+		lp.loadTopicPropSQL("topic-docs-May-26");
 	}
 }

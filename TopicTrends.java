@@ -130,7 +130,7 @@ public class TopicTrends {
 						noDocsQuestionPerMonth.get(creationMonth) + 1);
 
 				// add values of topics for the encountered month
-				ArrayList<Double> listTopic = hmAnswer.get(creationMonth);
+				ArrayList<Double> listTopic = hmQuestion.get(creationMonth);
 				for (int i = 3; i <= noTopics + 2; i++) {
 					String topicValue = rs.getString(i);
 					listTopic.set(
