@@ -65,7 +65,7 @@ public class TechnologyTrends {
 					rs.close();
 					continue;
 				}
-				rs.beforeFirst();
+				//rs.beforeFirst();
 
 				for (int i = 3; i <= noTopics + 2; i++) {
 					Double topicValue = Double.parseDouble(rs.getString(i));
@@ -82,7 +82,7 @@ public class TechnologyTrends {
 					FileWriter foutTag = new FileWriter(topicTags + "\\" + i,
 							true);
 					BufferedWriter broutTag = new BufferedWriter(foutTag);
-					broutTag.append(String.valueOf(path.getFileName()));
+					broutTag.append(String.valueOf(path.getFileName()) + " " + cumTopic[i]);
 					broutTag.newLine();
 					broutTag.close();
 				}
@@ -128,7 +128,7 @@ public class TechnologyTrends {
 						rs.close();
 						continue;
 					}
-					rs.beforeFirst();
+					//rs.beforeFirst();
 
 					if (!hm.containsKey(rs.getString(1))) {
 						hm.put(rs.getString(1), 0.0);
