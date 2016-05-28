@@ -78,11 +78,11 @@ public class TopicShare {
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					fileOutput));
 			for (int i = 0; i < noTopics; i++) {
-				bufferedWriter.write(String.valueOf((topicShare[i] / sum) * 100) + "%");
+				bufferedWriter.write(String.valueOf((topicShare[i] / sum) * 100));
 				totalPerc += (topicShare[i] / sum) * 100;
 				bufferedWriter.newLine();
 			}
-			bufferedWriter.write("Total Percentage = " + String.valueOf(totalPerc) + "%");
+			bufferedWriter.write("Total Percentage = " + String.valueOf(totalPerc));
 			bufferedWriter.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,9 +91,8 @@ public class TopicShare {
 
 	public static void main(String[] args) {
 		TopicShare ts = new TopicShare(40);
-		ts.calcTopicAggregate("topic-docs-23-May");
+		ts.calcTopicAggregate("topic-docs-May-26");
 		ts.calTopicSharePerDocument();
 		ts.calcTopicShareAcrossTopics();
 	}
-
 }
