@@ -61,7 +61,7 @@ public class TopicRelationship {
 					rq.close();
 					continue;
 				}
-				rq.beforeFirst();
+				//rq.beforeFirst();
 
 				int topicNumber = 0;
 				for (int qc = 3; qc <= noTopics + 2; qc++) {
