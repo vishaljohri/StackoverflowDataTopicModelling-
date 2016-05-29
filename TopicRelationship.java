@@ -28,7 +28,7 @@ public class TopicRelationship {
 		PreparedStatement ps = (PreparedStatement) con
 				.prepareStatement(selectQuestion);
 
-		int noRows = 1000;
+		int noRows = 10000;
 		long iter = 0;
 		long start = 0;
 		long count = 1;
