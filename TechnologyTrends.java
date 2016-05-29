@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -65,7 +67,7 @@ public class TechnologyTrends {
 					rs.close();
 					continue;
 				}
-				//rs.beforeFirst();
+				// rs.beforeFirst();
 
 				for (int i = 3; i <= noTopics + 2; i++) {
 					Double topicValue = Double.parseDouble(rs.getString(i));
@@ -82,7 +84,8 @@ public class TechnologyTrends {
 					FileWriter foutTag = new FileWriter(topicTags + "\\" + i,
 							true);
 					BufferedWriter broutTag = new BufferedWriter(foutTag);
-					broutTag.append(String.valueOf(path.getFileName()) + " " + cumTopic[i]);
+					broutTag.append(String.valueOf(path.getFileName()) + " "
+							+ cumTopic[i]);
 					broutTag.newLine();
 					broutTag.close();
 				}
@@ -110,7 +113,8 @@ public class TechnologyTrends {
 				.prepareStatement(selectQuestionForTags);
 		long seqNumber = 1;
 		for (String tech : groupTags.keySet()) {
-			System.out.println("Building hmTechImpactTags, sequence no = " + seqNumber++);
+			System.out.println("Building hmTechImpactTags, "
+					+ " sequence no = " + seqNumber++ + " tech name = " + tech);
 			HashMap<String, Double> hm = new HashMap<>();
 			ArrayList<String> list = groupTags.get(tech);
 			for (String tag : list) {
@@ -128,7 +132,7 @@ public class TechnologyTrends {
 						rs.close();
 						continue;
 					}
-					//rs.beforeFirst();
+					// rs.beforeFirst();
 
 					if (!hm.containsKey(rs.getString(1))) {
 						hm.put(rs.getString(1), 0.0);
@@ -145,7 +149,7 @@ public class TechnologyTrends {
 		psTag.close();
 
 		// build hmTechImpactTopic
-		int noRows = 1000;
+		int noRows = 10000;
 		long iter = 0;
 		long start = 0;
 		long count = 1;
@@ -188,19 +192,33 @@ public class TechnologyTrends {
 			HashMap<String, ArrayList<String>> groupTags)
 			throws ClassNotFoundException, SQLException, IOException {
 		technologyTrendsHelper(dataPath, topicNumber, groupTags);
-
+		
 		// write technology trends to file
-		FileWriter fwTechnology = new FileWriter("TechnologyTrends.txt", true);
+		FileWriter fwTechnology = new FileWriter("TechnologyTrends"
+				+ topicNumber + ".txt", true);
 		BufferedWriter bwTechnology = new BufferedWriter(fwTechnology);
-		bwTechnology.append("Technology topic number is : " + String.valueOf(topicNumber));
+		bwTechnology.append("Technology topic number is : "
+				+ String.valueOf(topicNumber));
 		bwTechnology.newLine();
 		bwTechnology.newLine();
 		for (String str : hmTechImpactTags.keySet()) {
 			bwTechnology.append("Technology name: " + str);
 			bwTechnology.newLine();
 			HashMap<String, Double> hm = hmTechImpactTags.get(str);
-			for(String month : hm.keySet()) {
-				bwTechnology.append(month + " " + String.valueOf((hm.get(month) / hmTechImpactTopic.get(month))));
+			
+			// logic to get year-month in ascending order
+			ArrayList<String> al = new ArrayList<>();
+			for (String month : hm.keySet()) {
+				al.add(month);
+			}
+			Collections.sort(al);
+			System.out.println("after sorting year and month: " + al);
+			
+			for (String month : al) {
+				bwTechnology.append(month
+						+ " "
+						+ String.valueOf((hm.get(month) / hmTechImpactTopic
+								.get(month))));
 				bwTechnology.newLine();
 			}
 			bwTechnology.newLine();
@@ -213,10 +231,81 @@ public class TechnologyTrends {
 		bwTechnology.close();
 	}
 
+	void groupTagsCreateTrends(String dataPath) throws IOException,
+			ClassNotFoundException, SQLException {
+		
+		// give topic number for trends
+		int topic = 8;
+
+		// create map for tech name and corresponding keywords
+		HashMap<String, ArrayList<String>> hm = new HashMap<>();
+		/*
+		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
+		 * hm.put("python", new ArrayList<>(Arrays.asList("python")));
+		 * hm.put("php", new ArrayList<>(Arrays.asList("php"))); hm.put("perl",
+		 * new ArrayList<>(Arrays.asList("perl"))); hm.put("ruby", new
+		 * ArrayList<>(Arrays.asList("ruby"))); hm.put("vbscript", new
+		 * ArrayList<>(Arrays.asList("vbscript")));
+		 */
+		hm.put("java", new ArrayList<>(Arrays.asList("java")));
+		hm.put("c++", new ArrayList<>(Arrays.asList("c++")));
+		hm.put("c#", new ArrayList<>(Arrays.asList("c#")));
+		hm.put("php", new ArrayList<>(Arrays.asList("php")));
+		hm.put("python", new ArrayList<>(Arrays.asList("python")));
+		hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
+
+		// search for the keywords of tech in the given topic
+		String topicTags = dataPath + "\\" + "TopicTags" + "\\" + topic;
+		HashMap<String, ArrayList<String>> groupTags = new HashMap<>();
+		groupTags.put("java", new ArrayList<String>());
+		groupTags.put("c++", new ArrayList<String>());
+		groupTags.put("c#", new ArrayList<String>());
+		groupTags.put("php", new ArrayList<String>());
+		groupTags.put("python", new ArrayList<String>());
+		groupTags.put("javascript", new ArrayList<String>());
+		File file = new File(topicTags);
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		String thisLine = null;
+		while ((thisLine = bufferedReader.readLine()) != null) {
+			for (String tech : hm.keySet()) {
+				ArrayList<String> keywords = hm.get(tech);
+				
+				// special matching for java to avoid javascript
+				if (tech.equals("java")) {
+					for (String k : keywords) {
+						if (!thisLine.toLowerCase().contains("javascript")
+								&& thisLine.toLowerCase().contains(
+										k.toLowerCase())) {
+							groupTags.get(tech).add(thisLine.split("\\s+")[0]);
+						}
+					}
+				} else {
+					for (String k : keywords) {
+						if (thisLine.toLowerCase().contains(k.toLowerCase())) {
+							groupTags.get(tech).add(thisLine.split("\\s+")[0]);
+						}
+					}
+				}
+			}
+		}
+		bufferedReader.close();
+
+		// print group of tags for technology
+		for (String tech : groupTags.keySet()) {
+			System.out.println("Tech : " + tech);
+			System.out.println("tags : " + groupTags.get(tech));
+		}
+
+		// call technologyTrends with datapath, topic number and group of tags
+		technologyTrends(dataPath, topic, groupTags);
+	}
+
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, SQLException {
 		TechnologyTrends technologyTrends = new TechnologyTrends(40);
+		// technologyTrends
+		// .identifyTags("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
 		technologyTrends
-				.identifyTags("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
+				.groupTagsCreateTrends("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
 	}
 }
