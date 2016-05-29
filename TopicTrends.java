@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class TopicTrends {
@@ -30,7 +31,7 @@ public class TopicTrends {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
-		int noRows = 1000;
+		int noRows = 10000;
 		long iter = 0;
 		long start = 0;
 		long count = 1;
@@ -92,7 +93,7 @@ public class TopicTrends {
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
-		int noRows = 1000;
+		int noRows = 10000;
 		long iter = 0;
 		long start = 0;
 		long count = 1;
@@ -152,7 +153,15 @@ public class TopicTrends {
 		// answer trends
 		FileWriter fwAnswer = new FileWriter("AnswerTopicTrends.txt");
 		BufferedWriter bwAnswer = new BufferedWriter(fwAnswer);
-		for (String str : hmAnswer.keySet()) {
+		// logic to get year-month in ascending order
+		ArrayList<String> alAnswer = new ArrayList<>();
+		for (String month : hmAnswer.keySet()) {
+			alAnswer.add(month);
+		}
+		Collections.sort(alAnswer);
+		System.out.println("after sorting year and month of answer: "
+				+ alAnswer);
+		for (String str : alAnswer) {
 			bwAnswer.write("YearMonth: " + str);
 			bwAnswer.newLine();
 			ArrayList<Double> list = hmAnswer.get(str);
@@ -168,7 +177,15 @@ public class TopicTrends {
 		// question trends
 		FileWriter fwQuestion = new FileWriter("QuestionTopicTrends.txt");
 		BufferedWriter bwQuestion = new BufferedWriter(fwQuestion);
-		for (String str : hmQuestion.keySet()) {
+		// logic to get year-month in ascending order
+		ArrayList<String> alQuestion = new ArrayList<>();
+		for (String month : hmQuestion.keySet()) {
+			alQuestion.add(month);
+		}
+		Collections.sort(alQuestion);
+		System.out.println("after sorting year and month of answer: "
+				+ alQuestion);
+		for (String str : alQuestion) {
 			bwQuestion.write("YearMonth: " + str);
 			bwQuestion.newLine();
 			ArrayList<Double> list = hmQuestion.get(str);
@@ -184,13 +201,13 @@ public class TopicTrends {
 		// combined trends
 		FileWriter fwCombined = new FileWriter("CombinedTopicTrends.txt");
 		BufferedWriter bwCombined = new BufferedWriter(fwCombined);
-		for (String str : hmQuestion.keySet()) {
+		for (String str : alQuestion) {
 			bwCombined.write("YearMonth: " + str);
 			bwCombined.newLine();
 			ArrayList<Double> listQuestion = hmQuestion.get(str);
 			ArrayList<Double> listAnswer = hmAnswer.get(str);
 			for (int i = 0; i < listQuestion.size(); i++) {
-				double relvalue = (listQuestion.get(0) + listAnswer.get(0))
+				double relvalue = (listQuestion.get(i) + listAnswer.get(i))
 						/ (noDocsQuestionPerMonth.get(str) + noDocsAnswerPerMonth
 								.get(str));
 				bwCombined.write(String.valueOf(relvalue) + "  ");
