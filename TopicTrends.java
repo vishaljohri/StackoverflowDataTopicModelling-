@@ -154,10 +154,7 @@ public class TopicTrends {
 		FileWriter fwAnswer = new FileWriter("AnswerTopicTrends.txt");
 		BufferedWriter bwAnswer = new BufferedWriter(fwAnswer);
 		// logic to get year-month in ascending order
-		ArrayList<String> alAnswer = new ArrayList<>();
-		for (String month : hmAnswer.keySet()) {
-			alAnswer.add(month);
-		}
+		ArrayList<String> alAnswer = new ArrayList<>(hmAnswer.keySet());
 		Collections.sort(alAnswer);
 		System.out.println("after sorting year and month of answer: "
 				+ alAnswer);
@@ -178,10 +175,7 @@ public class TopicTrends {
 		FileWriter fwQuestion = new FileWriter("QuestionTopicTrends.txt");
 		BufferedWriter bwQuestion = new BufferedWriter(fwQuestion);
 		// logic to get year-month in ascending order
-		ArrayList<String> alQuestion = new ArrayList<>();
-		for (String month : hmQuestion.keySet()) {
-			alQuestion.add(month);
-		}
+		ArrayList<String> alQuestion = new ArrayList<>(hmQuestion.keySet());
 		Collections.sort(alQuestion);
 		System.out.println("after sorting year and month of answer: "
 				+ alQuestion);

@@ -192,7 +192,7 @@ public class TechnologyTrends {
 			HashMap<String, ArrayList<String>> groupTags)
 			throws ClassNotFoundException, SQLException, IOException {
 		technologyTrendsHelper(dataPath, topicNumber, groupTags);
-		
+
 		// write technology trends to file
 		FileWriter fwTechnology = new FileWriter("TechnologyTrends"
 				+ topicNumber + ".txt", true);
@@ -205,15 +205,12 @@ public class TechnologyTrends {
 			bwTechnology.append("Technology name: " + str);
 			bwTechnology.newLine();
 			HashMap<String, Double> hm = hmTechImpactTags.get(str);
-			
+
 			// logic to get year-month in ascending order
-			ArrayList<String> al = new ArrayList<>();
-			for (String month : hm.keySet()) {
-				al.add(month);
-			}
+			ArrayList<String> al = new ArrayList<>(hm.keySet());
 			Collections.sort(al);
 			System.out.println("after sorting year and month: " + al);
-			
+
 			for (String month : al) {
 				bwTechnology.append(month
 						+ " "
@@ -233,12 +230,12 @@ public class TechnologyTrends {
 
 	void groupTagsCreateTrends(String dataPath) throws IOException,
 			ClassNotFoundException, SQLException {
-		
-		// give topic number for trends
-		int topic = 8;
 
+		// give topic number for trends
+		int topic = 9;
 		// create map for tech name and corresponding keywords
 		HashMap<String, ArrayList<String>> hm = new HashMap<>();
+
 		/*
 		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
 		 * hm.put("python", new ArrayList<>(Arrays.asList("python")));
@@ -247,29 +244,56 @@ public class TechnologyTrends {
 		 * ArrayList<>(Arrays.asList("ruby"))); hm.put("vbscript", new
 		 * ArrayList<>(Arrays.asList("vbscript")));
 		 */
-		hm.put("java", new ArrayList<>(Arrays.asList("java")));
-		hm.put("c++", new ArrayList<>(Arrays.asList("c++")));
-		hm.put("c#", new ArrayList<>(Arrays.asList("c#")));
-		hm.put("php", new ArrayList<>(Arrays.asList("php")));
-		hm.put("python", new ArrayList<>(Arrays.asList("python")));
-		hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
+
+		/*
+		 * hm.put("java", new ArrayList<>(Arrays.asList("java"))); hm.put("c++",
+		 * new ArrayList<>(Arrays.asList("c++"))); hm.put("c#", new
+		 * ArrayList<>(Arrays.asList("c#"))); hm.put("php", new
+		 * ArrayList<>(Arrays.asList("php"))); hm.put("python", new
+		 * ArrayList<>(Arrays.asList("python"))); hm.put("javascript", new
+		 * ArrayList<>(Arrays.asList("javascript")));
+		 */
+
+		/*
+		 * hm.put("svn", new ArrayList<>(Arrays.asList("svn"))); hm.put("git",
+		 * new ArrayList<>(Arrays.asList("git"))); hm.put("clearcase", new
+		 * ArrayList<>(Arrays.asList("clearcase"))); hm.put("perforce", new
+		 * ArrayList<>(Arrays.asList("perforce")));
+		 */
+
+		/*
+		 * hm.put("android", new ArrayList<>(Arrays.asList("android")));
+		 * hm.put("iphone", new ArrayList<>(Arrays.asList("iphone")));
+		 * hm.put("blackberry", new ArrayList<>(Arrays.asList("blackberry")));
+		 */
+
+		/*
+		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
+		 * hm.put("jquery", new ArrayList<>(Arrays.asList("jquery")));
+		 * hm.put("php", new ArrayList<>(Arrays.asList("php")));
+		 * hm.put("asp.net", new ArrayList<>(Arrays.asList("asp.net")));
+		 */
+
+		hm.put("mysql", new ArrayList<>(Arrays.asList("mysql")));
+		hm.put("postgresql", new ArrayList<>(Arrays.asList("postgresql")));
+		hm.put("oracle", new ArrayList<>(Arrays.asList("oracle")));
+		hm.put("sqlite", new ArrayList<>(Arrays.asList("sqlite")));
 
 		// search for the keywords of tech in the given topic
 		String topicTags = dataPath + "\\" + "TopicTags" + "\\" + topic;
 		HashMap<String, ArrayList<String>> groupTags = new HashMap<>();
-		groupTags.put("java", new ArrayList<String>());
-		groupTags.put("c++", new ArrayList<String>());
-		groupTags.put("c#", new ArrayList<String>());
-		groupTags.put("php", new ArrayList<String>());
-		groupTags.put("python", new ArrayList<String>());
-		groupTags.put("javascript", new ArrayList<String>());
+		groupTags.put("mysql", new ArrayList<String>());
+		groupTags.put("postgresql", new ArrayList<String>());
+		groupTags.put("oracle", new ArrayList<String>());
+		groupTags.put("sqlite", new ArrayList<String>());
+
 		File file = new File(topicTags);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 		String thisLine = null;
 		while ((thisLine = bufferedReader.readLine()) != null) {
 			for (String tech : hm.keySet()) {
 				ArrayList<String> keywords = hm.get(tech);
-				
+
 				// special matching for java to avoid javascript
 				if (tech.equals("java")) {
 					for (String k : keywords) {
