@@ -1,0 +1,40 @@
+Date/Time
+File Operations
+Scripting Language
+Memory/Pointer 
+Thread/Process
+Object Relational Mapping
+Data Manipulation
+Programming Languages
+Database platform 
+Analyse and improve approach
+Authentication/Security
+Function
+Networking
+Regular Expression
+SQL
+Error/Exception Handling
+QA and Links
+Version Control
+Visual Studio tips
+Numerical Operation
+Image/Display 
+Platforms 
+Mobile App Development
+Clarify query
+Web Development
+Job/Experience 
+Performance/Optimization
+OOP
+Web Framework
+Problem/Solution
+Code Snippet
+Cryptography
+Data Structure/Algorithm
+Java
+Website Design/CSS
+UI Development
+Text Related
+Testing
+Data Format
+Learn Coding Style/Design

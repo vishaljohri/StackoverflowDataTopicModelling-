@@ -1,0 +1,40 @@
+Date/Time, 4.674532978629417
+File Operations, 7.147807478231846
+Scripting Language, 6.6659140661045075
+Memory/Pointer, 5.216601713965976
+Thread/Process, 6.067792949768821
+Object Relational Mapping, 6.5336854195093705
+Data Manipulation, 7.22928466952655
+Programming Languages, 7.854401240809275
+Database platform, 6.5803139325997115
+Analyse and improve approach, 10.119663489383424
+Authentication/Security, 6.35993285494115
+Function, 7.4150133995621825
+Networking, 5.9531358902119385
+Regular Expression, 7.031776104604933
+SQL, 7.467041003641932
+Error/Exception Handling, 6.627138776271487
+QA and Links, 8.15144941051743
+Version Control, 5.4264791055178705
+Visual Studio tips, 6.959133789474717
+Numerical Operation, 5.699869440163347
+Image/Display, 6.082026916922715
+Platforms, 6.302211663999843
+Mobile App Development, 5.999862568592997
+Clarify query, 9.084412333487126
+Web Development, 6.898467639811916
+Job/Experience, 7.327548125533774
+Performance/Optimization, 7.446524457882182
+OOP, 7.950505060420736
+Web Framework, 6.234772109277602
+Problem/Solution, 8.482953597267079
+Code Snippet, 6.209641794854175
+Cryptography, 5.082409761556509
+Data Structure/Algorithm, 6.703904033611796
+Java, 5.315552327008216
+Website Design/CSS, 7.689876213568407
+UI Development, 8.20426233692291
+Text Related, 6.1076480577997225
+Testing, 5.4189203781327
+Data Format, 5.758179622848953
+Learn Coding Style/Design, 8.172653113312196
