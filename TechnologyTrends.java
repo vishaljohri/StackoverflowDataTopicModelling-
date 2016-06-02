@@ -195,15 +195,16 @@ public class TechnologyTrends {
 
 		// write technology trends to file
 		FileWriter fwTechnology = new FileWriter("TechnologyTrends"
-				+ topicNumber + ".txt", true);
+				+ topicNumber + ".txt");
 		BufferedWriter bwTechnology = new BufferedWriter(fwTechnology);
-		bwTechnology.append("Technology topic number is : "
-				+ String.valueOf(topicNumber));
-		bwTechnology.newLine();
-		bwTechnology.newLine();
+		/*
+		 * bwTechnology.append("Technology topic number is : " +
+		 * String.valueOf(topicNumber)); bwTechnology.newLine();
+		 * bwTechnology.newLine();
+		 */
 		for (String str : hmTechImpactTags.keySet()) {
-			bwTechnology.append("Technology name: " + str);
-			bwTechnology.newLine();
+			// bwTechnology.append("Technology name: " + str);
+			// bwTechnology.newLine();
 			HashMap<String, Double> hm = hmTechImpactTags.get(str);
 
 			// logic to get year-month in ascending order
@@ -212,19 +213,19 @@ public class TechnologyTrends {
 			System.out.println("after sorting year and month: " + al);
 
 			for (String month : al) {
-				bwTechnology.append(month
+				bwTechnology.write(month
 						+ " "
 						+ String.valueOf((hm.get(month) / hmTechImpactTopic
-								.get(month))));
+								.get(month))) + " " + str);
 				bwTechnology.newLine();
 			}
-			bwTechnology.newLine();
-			bwTechnology.newLine();
+			// bwTechnology.newLine();
+			// bwTechnology.newLine();
 		}
-		bwTechnology.newLine();
-		bwTechnology.newLine();
-		bwTechnology.newLine();
-		bwTechnology.newLine();
+		// bwTechnology.newLine();
+		// bwTechnology.newLine();
+		// bwTechnology.newLine();
+		// bwTechnology.newLine();
 		bwTechnology.close();
 	}
 
@@ -232,7 +233,7 @@ public class TechnologyTrends {
 			ClassNotFoundException, SQLException {
 
 		// give topic number for trends
-		int topic = 9;
+		int topic = 8;
 		// create map for tech name and corresponding keywords
 		HashMap<String, ArrayList<String>> hm = new HashMap<>();
 
@@ -245,14 +246,12 @@ public class TechnologyTrends {
 		 * ArrayList<>(Arrays.asList("vbscript")));
 		 */
 
-		/*
-		 * hm.put("java", new ArrayList<>(Arrays.asList("java"))); hm.put("c++",
-		 * new ArrayList<>(Arrays.asList("c++"))); hm.put("c#", new
-		 * ArrayList<>(Arrays.asList("c#"))); hm.put("php", new
-		 * ArrayList<>(Arrays.asList("php"))); hm.put("python", new
-		 * ArrayList<>(Arrays.asList("python"))); hm.put("javascript", new
-		 * ArrayList<>(Arrays.asList("javascript")));
-		 */
+		hm.put("java", new ArrayList<>(Arrays.asList("java")));
+		hm.put("c++", new ArrayList<>(Arrays.asList("c++")));
+		hm.put("c#", new ArrayList<>(Arrays.asList("c#")));
+		hm.put("php", new ArrayList<>(Arrays.asList("php")));
+		hm.put("python", new ArrayList<>(Arrays.asList("python")));
+		hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
 
 		/*
 		 * hm.put("svn", new ArrayList<>(Arrays.asList("svn"))); hm.put("git",
@@ -274,18 +273,22 @@ public class TechnologyTrends {
 		 * hm.put("asp.net", new ArrayList<>(Arrays.asList("asp.net")));
 		 */
 
-		hm.put("mysql", new ArrayList<>(Arrays.asList("mysql")));
-		hm.put("postgresql", new ArrayList<>(Arrays.asList("postgresql")));
-		hm.put("oracle", new ArrayList<>(Arrays.asList("oracle")));
-		hm.put("sqlite", new ArrayList<>(Arrays.asList("sqlite")));
+		/*
+		 * hm.put("mysql", new ArrayList<>(Arrays.asList("mysql")));
+		 * hm.put("postgresql", new ArrayList<>(Arrays.asList("postgresql")));
+		 * hm.put("oracle", new ArrayList<>(Arrays.asList("oracle")));
+		 * hm.put("sqlite", new ArrayList<>(Arrays.asList("sqlite")));
+		 */
 
 		// search for the keywords of tech in the given topic
 		String topicTags = dataPath + "\\" + "TopicTags" + "\\" + topic;
 		HashMap<String, ArrayList<String>> groupTags = new HashMap<>();
-		groupTags.put("mysql", new ArrayList<String>());
-		groupTags.put("postgresql", new ArrayList<String>());
-		groupTags.put("oracle", new ArrayList<String>());
-		groupTags.put("sqlite", new ArrayList<String>());
+		groupTags.put("java", new ArrayList<String>());
+		groupTags.put("c++", new ArrayList<String>());
+		groupTags.put("c#", new ArrayList<String>());
+		groupTags.put("php", new ArrayList<String>());
+		groupTags.put("python", new ArrayList<String>());
+		groupTags.put("javascript", new ArrayList<String>());
 
 		File file = new File(topicTags);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
