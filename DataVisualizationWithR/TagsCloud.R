@@ -1,0 +1,11 @@
+library("wordcloud")
+fileName <- "TagsCumulativeAcrossDocuments.txt"
+conn <- file(fileName, open = "r")
+line <- readLines(conn)
+close(conn)
+data <- strsplit(line, " ")
+words <- sapply(data,'[',1)
+frequency <- sapply(data,'[',2)
+frequency <- as.numeric(as.character(frequency))
+pal2 <- brewer.pal(8,"Dark2")
+wordcloud(words, frequency, max.words = 200,  colors = pal2)
