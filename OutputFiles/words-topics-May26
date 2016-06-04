@@ -1,0 +1,40 @@
+0	0.125	time date report day format number current everi user month year set chang hour field display work differ start end -> Date/Time
+1	0.125	file path folder directori files creat includ copi open directory upload set config add locat header put delet configur chang -> File Operations
+2	0.125	command line script run file output modul python program shell perl execut set work start tri window print option call -> Scripting Language
+3	0.125	memori pointer array bit stack size alloc byte address code memory space heap point buffer compil int function struct copi -> Memory/Pointer 
+4	0.125	thread process call run time lock wait task event start queue execut block applic state loop handl main program timer -> Thread/Process
+5	0.125	model design pattern data object logic layer entiti busi implement map applic framework differ depend approach separ class domain relat -> Object Relational Mapping
+6	0.125	type valu return string null paramet method set pass check default true object properti cast int oper convert case field -> Data Manipulation
+7	0.125	languag python librari program code java framework support language php write rubi net implement good standard function featur lot mani -> Programming Languages
+8	0.125	sql databas server store data queri connect database mysql access procedur linq transact oracl run tabl creat statement schema execut -> Database platform 
+9	0.125	code make you'r don't thing realli case probabl reason good someth i'd alway easier lot write you'll doesn't isn't bad -> Analyse and improve approach
+10	0.125	user web applic access server site run app set iis asp.net account servic log window creat application sharepoint host authent -> Authentication/Security
+11	0.125	function call variabl code compil defin declar pass argument global scope paramet return functions templat statement foo make differ exampl -> Function
+12	0.125	server client servic send connect web messag email network wcf address port side service protocol socket host remot call request -> Networking
+13	0.125	string charact match text regex regular word line express encod replac end utf space characters search quot follow escap case -> Regular Expression
+14	0.125	tabl column row queri table index key select record data field insert join creat sql valu result databas order primari -> SQL
+15	0.125	error code log tri debug messag check throw exception follow call catch line problem handl fail caus trace block run -> Error/Exception Handling
+16	0.125	answer question post articl good read link book blog found find comment exampl search edit code googl detail check inform -> QA and Links
+17	0.125	version chang work svn build branch project sourc control commit repositori check updat git merg file copi make develop releas -> Version Control
+18	0.125	project visual studio net build compil version dll assembl librari instal code refer file applic debug link load framework creat -> Visual Studio tips
+19	0.125	number point algorithm valu bit random calcul result problem find comput float generat set rang function graph integ give case -> Numerical Operation
+20	0.125	imag set color size screen text image draw display background font width make tri chang creat cell render scroll pixel -> Image/Display 
+21	0.125	window run system instal linux machin bit program work windows applic platform support win version virtual mac vista devic machine -> Platforms 
+22	0.125	app flash applic api googl game iphon silverlight video develop play flex player i'm support work sound mobil phone sdk -> Mobile App Development
+23	0.125	i'm i've tri work someth code question i'd can't anyon find edit don't realli doesn't answer figur abl found wrong -> Clarify query
+24	0.125	page request url php session server site browser user web http post redirect link ajax content cooki set header javascript -> Web Development
+25	0.125	develop project product work softwar team system time peopl manag compani custom tool good featur requir support make sourc mani -> Job/Experience 
+26	0.125	time perform cach faster optim lot run speed slow larg load memori fast mani realli differ make performance small number -> Performance/Optimization
+27	0.125	class method implement call interfac type creat properti base object instanc inherit static public constructor defin make member methods classes -> OOP
+28	0.125	control view page asp.net mvc creat form action model custom add templat method code call user render django work rout -> Web Framework
+29	0.125	problem work tri code fix solv issu i've fine solut caus chang bug doesn't found i'm error time edit happen -> Problem/Solution
+30	0.125	object method call refer creat instanc class pass objects properti collect constructor return copi initi make don't code you'r variabl -> Code Snippet
+31	0.125	user key valid hash password secur store encrypt don't make check input address generat email sign protect certif data prevent -> Cryptography
+32	0.125	list array item element sort node loop order iter tree collect add valu return key index map search parent child -> Data Structure/Algorithm
+33	0.125	java plugin eclips project class jar applic spring configur packag build run work depend tomcat tri ant jvm maven ide -> Java
+34	0.125	javascript html css page element jqueri tag browser div work style content firefox link dom tri load attribut jquery script -> Website Design/CSS
+35	0.125	event form button click control select user set properti window bind box item chang tab add text menu dialog display -> UI Developemnt
+36	0.125	xml document generat excel file format text html code pars pdf tool word creat parser print output editor open convert -> Text Related
+37	0.125	test code unit write run work make tests mock testing tool refactor don't case check chang time good function autom -> Testing
+38	0.125	data read write file store stream serial format xml json save binari structur output compress object back load byte don't -> Data Format
+39	0.125	learn good thing time program don't start realli lot work make peopl understand code design write someth i've stuff find -> Learn Coding Style/Design
