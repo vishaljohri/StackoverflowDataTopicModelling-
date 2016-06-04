@@ -37,7 +37,26 @@ public class InterpretResults {
 		while (i < noTopics) {
 			thisLine = bufferedReader.readLine();
 			thisLine = thisLine.trim();
-			bw.write(topicName[i] + " " + thisLine);
+			bw.write(topicName[i] + ", " + thisLine);
+			bw.newLine();
+			i++;
+		}
+		bw.close();
+		bufferedReader.close();
+	}
+	
+	void interpretTopicSpread(String fileName) throws IOException {
+		File file = new File(fileName);
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+		FileWriter fw = new FileWriter("InterpretedTopicSpreadPerDocument.txt");
+		BufferedWriter bw = new BufferedWriter(fw);
+
+		String thisLine = null;
+		int i = 0;
+		while (i < noTopics) {
+			thisLine = bufferedReader.readLine();
+			thisLine = thisLine.trim();
+			bw.write(topicName[i] + ", " + Double.parseDouble(thisLine) * 100);
 			bw.newLine();
 			i++;
 		}
@@ -86,6 +105,7 @@ public class InterpretResults {
 		InterpretResults ir = new InterpretResults(40);
 		ir.readTopics("TopicNames.txt");
 		ir.interpretTopicShare("TopicShareAcrossTopics.txt");
+		ir.interpretTopicSpread("TopicSpreadPerDocument.txt");
 		ir.interpretTopicRelationship("TopicRelationship.txt");
 	}
 }
