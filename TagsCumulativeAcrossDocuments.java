@@ -57,7 +57,7 @@ public class TagsCumulativeAcrossDocuments {
 
 		// write results to output file
 		FileWriter fileWriter = new FileWriter(
-				"TopicsCumulativeAcrossDocuments.txt");
+				"TagsCumulativeAcrossDocuments.txt");
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		for (Map.Entry<String, Double> el : list) {
 			bufferedWriter.write(el.getKey() + " " + el.getValue());
