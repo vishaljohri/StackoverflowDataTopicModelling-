@@ -58,7 +58,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 				String monthWithYear = fullDate[0] + "-" + fullDate[1];
 				// question posts
 				if (rs.getString("PostTypeId").equals("1")) {
-					String dirNameQuestion = "G:\\Mallet\\Analysis_May25\\DataWithFileStructure\\TextualData\\Questions\\"
+					String dirNameQuestion = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\TextualData\\Questions\\"
 							+ monthWithYear;
 					File dirQuestion = new File(dirNameQuestion);
 					if (!dirQuestion.exists()) {
@@ -77,7 +77,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 					}
 
 					// for tags
-					String tagDir = "G:\\Mallet\\Analysis_May25\\DataWithFileStructure\\Tags\\";
+					String tagDir = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\Tags\\";
 					String tags[] = rs.getString("Tags").split("<|><|>");
 					for (int i = 1; i < tags.length; i++) {
 						try {
@@ -95,7 +95,7 @@ public class CopyFromSqlToFilesMaintainStructure {
 				}
 				// answer posts
 				else {
-					String dirNameAnswer = "G:\\Mallet\\Analysis_May25\\DataWithFileStructure\\TextualData\\Answers\\"
+					String dirNameAnswer = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\TextualData\\Answers\\"
 							+ monthWithYear;
 					File dirAnswer = new File(dirNameAnswer);
 					if (!dirAnswer.exists()) {
