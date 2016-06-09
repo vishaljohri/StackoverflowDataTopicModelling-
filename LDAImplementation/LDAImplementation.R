@@ -1,4 +1,5 @@
 ## Generate a corpus
+"
 rawdocs <- c('eat turkey on turkey day holiday',
           'i like to eat cake on holiday',
           'turkey trot race on thanksgiving holiday',
@@ -9,9 +10,18 @@ rawdocs <- c('eat turkey on turkey day holiday',
           'aspiring movie star')
 
 docs <- strsplit(rawdocs, split=' ', perl=T) # generate a list of documents
+"
+
+dat.files  <- list.files(path="G:\\Mallet\\Data\\TestData", recursive = T, pattern = "*.txt", full.names = T)
+x <- lapply(dat.files, readLines)
+docs <- list()
+for(i in 1 : length(x)) {
+	docs[i] <- strsplit(x[[i]]," ",  perl=T)
+}
+
 
 ## PARAMETERS
-K <- 2 # number of topics
+K <- 5 # number of topics
 alpha <- 1 # hyperparameter. single value indicates symmetric dirichlet prior. higher=>scatters document clusters
 eta <- .001 # hyperparameter
 iterations <- 4 # iterations for collapsed gibbs sampling.  This should be a lot higher than 4 in practice.
