@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -94,6 +95,43 @@ public class TechnologyTrends {
 		stream.close();
 		ps.close();
 		con.close();
+	}
+
+	void sortTagsFrequencyPerTopic(String dataPath) throws IOException {
+		String topicPath = dataPath + "\\" + "TopicTags";
+		String sortedTagsPath = dataPath + "\\" + "SortedTags";
+		for (int i = 1; i <= noTopics; i++) {
+			System.out.println("Starting with topic number " + i);
+			File file = new File(topicPath + "\\" + i);
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			ArrayList<String> list = new ArrayList<>();
+			String thisLine = null;
+			while ((thisLine = br.readLine()) != null) {
+				list.add(thisLine.trim());
+			}
+			br.close();
+			Collections.sort(list, new Comparator<String>() {
+				@Override
+				public int compare(String o1, String o2) {
+					String first[] = o1.split("\\s+");
+					String second[] = o2.split("\\s+");
+					if (Double.parseDouble(second[1]) > Double
+							.parseDouble(first[1]))
+						return 1;
+					else
+						return -1;
+				}
+
+			});
+
+			FileWriter fw = new FileWriter(sortedTagsPath + "\\" + i);
+			BufferedWriter bw = new BufferedWriter(fw);
+			for (String str : list) {
+				bw.write(str);
+				bw.newLine();
+			}
+			bw.close();
+		}
 	}
 
 	void technologyTrendsHelper(String dataPath, int topicNumber,
@@ -332,6 +370,8 @@ public class TechnologyTrends {
 		TechnologyTrends technologyTrends = new TechnologyTrends(40);
 		// technologyTrends
 		// .identifyTags("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
+		// technologyTrends
+		// .sortTagsFrequencyPerTopic("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
 		technologyTrends
 				.groupTagsCreateTrends("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
 	}
