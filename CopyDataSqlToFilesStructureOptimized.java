@@ -34,15 +34,16 @@ class WriteData implements Runnable {
 	public void run() {
 
 		try {
-			System.out.println("Sequence No = " + postNo + " and id = "
-					+ this.id + " executed by "
-					+ Thread.currentThread().getName());
+			/*
+			 * System.out.println("Sequence No = " + postNo + " and id = " +
+			 * this.id + " executed by " + Thread.currentThread().getName());
+			 */
 			String creationDateFull[] = this.creationDate.split("\\s+");
 			String fullDate[] = creationDateFull[0].split("-");
 			String monthWithYear = fullDate[0] + "-" + fullDate[1];
 			// question posts
 			if (this.postTypeId.equals("1")) {
-				String dirNameQuestion = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\TextualData\\Questions\\"
+				String dirNameQuestion = "G:\\Mallet\\Analysis_Optimized\\DataWithFileStructure\\TextualData\\Questions\\"
 						+ monthWithYear;
 				File dirQuestion = new File(dirNameQuestion);
 				if (!dirQuestion.exists()) {
@@ -50,18 +51,17 @@ class WriteData implements Runnable {
 				}
 				try {
 					FileWriter foutQuestion = new FileWriter(dirNameQuestion
-							+ "\\" + this.id + "_" + monthWithYear + ".txt",
-							true);
+							+ "\\" + this.id + "_" + monthWithYear + ".txt");
 					BufferedWriter broutQuestion = new BufferedWriter(
 							foutQuestion);
 					broutQuestion.write(this.body);
 					broutQuestion.close();
 				} catch (NullPointerException ex) {
-					System.out.println("Body is null for this id");
+					System.out.println("Body is null for this id : " + this.id);
 				}
 
 				// for tags
-				String tagDir = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\Tags\\";
+				String tagDir = "G:\\Mallet\\Analysis_Optimized\\DataWithFileStructure\\Tags\\";
 				String tagsList[] = this.tags.split("<|><|>");
 				for (int i = 1; i < tagsList.length; i++) {
 					try {
@@ -72,13 +72,13 @@ class WriteData implements Runnable {
 						broutTag.newLine();
 						broutTag.close();
 					} catch (NullPointerException ex) {
-						System.out.println("Tag is null for this id");
+						System.out.println("Tag is null for this id : " + this.id);
 					}
 				}
 			}
 			// answer posts
 			else {
-				String dirNameAnswer = "G:\\Mallet\\Analysis_June4\\DataWithFileStructure\\TextualData\\Answers\\"
+				String dirNameAnswer = "G:\\Mallet\\Analysis_Optimized\\DataWithFileStructure\\TextualData\\Answers\\"
 						+ monthWithYear;
 				File dirAnswer = new File(dirNameAnswer);
 				if (!dirAnswer.exists()) {
@@ -87,12 +87,12 @@ class WriteData implements Runnable {
 				try {
 					FileWriter foutAnswer = new FileWriter(dirNameAnswer + "\\"
 							+ this.id + "_" + this.parentId + "_"
-							+ monthWithYear + ".txt", true);
+							+ monthWithYear + ".txt");
 					BufferedWriter broutAnswer = new BufferedWriter(foutAnswer);
 					broutAnswer.write(this.body);
 					broutAnswer.close();
 				} catch (NullPointerException ex) {
-					System.out.println("Body is null for this id");
+					System.out.println("Body is null for this id : " + this.id);
 				}
 			}
 		} catch (Exception ex) {
@@ -103,29 +103,33 @@ class WriteData implements Runnable {
 
 public class CopyDataSqlToFilesStructureOptimized {
 
-	void loadData() throws ClassNotFoundException, SQLException, IOException {
+	void loadData() throws ClassNotFoundException, SQLException, IOException,
+			InterruptedException {
 
 		String url = "jdbc:mysql://localhost:3306/stackoverflow?useSSL=false";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
-		ExecutorService es = Executors.newFixedThreadPool(1000);
-		// ExecutorService es = Executors.newCachedThreadPool();
 
-		int noRows = 10000;
+		int noRows = 50000;
 		int iter = 0;
 		long start = 0;
-		long count = 0;
+		long count = 6801812;
+		long end = 8109999;
 		while (true) {
+			long startTime = System.currentTimeMillis();
+			ExecutorService es = Executors.newFixedThreadPool(1000);
 			Statement st = con.createStatement(
 					java.sql.ResultSet.TYPE_FORWARD_ONLY,
 					java.sql.ResultSet.CONCUR_READ_ONLY);
-			st.setFetchSize(1000);
+			st.setFetchSize(5000);
 
-			// test optimization
-			start = iter * noRows;
+			start = end + 1;
+			end = start + noRows - 1;
+
 			ResultSet rs = st
-					.executeQuery("select Id, PostTypeId, ParentId, Body, Title, Tags, CreationDate from posts LIMIT "
-							+ start + "," + noRows);
+					.executeQuery("select Id, PostTypeId, ParentId, Body, Title, Tags, CreationDate from posts WHERE Id BETWEEN "
+							+ start + " AND " + end);
+
 			if (!rs.next()) {
 				System.out.println("done with all the data");
 				st.close();
@@ -133,31 +137,34 @@ public class CopyDataSqlToFilesStructureOptimized {
 				break;
 			}
 			rs.beforeFirst();
-			System.out.println(rs);
 
 			while (rs.next()) {
 				count++;
-				es.execute(new WriteData(count, rs.getString("Id"), rs
-						.getString("CreationDate"), rs.getString("PostTypeId"),
-						rs.getString("Body"), rs.getString("Tags"), rs
-								.getString("ParentId")));
+				WriteData writeData = new WriteData(count, rs.getString("Id"),
+						rs.getString("CreationDate"),
+						rs.getString("PostTypeId"), rs.getString("Body"),
+						rs.getString("Tags"), rs.getString("ParentId"));
+				es.execute(writeData);
+			}
+			es.shutdown();
+			while (!es.isTerminated()) {
 			}
 
 			st.close();
 			rs.close();
 			iter++;
+			System.out.println("Document Ids and no completed : " + end + ", "
+					+ count + " Time taken : "
+					+ (System.currentTimeMillis() - startTime));
 		}
-		es.shutdown();
-		while (!es.isTerminated()) {
-		}
+
 		System.out.println("Finished all threads");
 		con.close();
 	}
 
 	public static void main(String[] args) throws ClassNotFoundException,
-			SQLException, IOException {
+			SQLException, IOException, InterruptedException {
 		CopyDataSqlToFilesStructureOptimized c = new CopyDataSqlToFilesStructureOptimized();
 		c.loadData();
 	}
-
 }
