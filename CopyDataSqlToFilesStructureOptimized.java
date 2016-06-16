@@ -111,10 +111,9 @@ public class CopyDataSqlToFilesStructureOptimized {
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
 		int noRows = 50000;
-		int iter = 0;
 		long start = 0;
-		long count = 6801812;
-		long end = 8109999;
+		long count = 0;
+		long end = -1;
 		while (true) {
 			long startTime = System.currentTimeMillis();
 			ExecutorService es = Executors.newFixedThreadPool(1000);
@@ -152,7 +151,6 @@ public class CopyDataSqlToFilesStructureOptimized {
 
 			st.close();
 			rs.close();
-			iter++;
 			System.out.println("Document Ids and no completed : " + end + ", "
 					+ count + " Time taken : "
 					+ (System.currentTimeMillis() - startTime));
