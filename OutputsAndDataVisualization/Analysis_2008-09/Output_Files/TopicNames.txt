@@ -16,7 +16,7 @@ SQL
 Error/Exception Handling
 QA and Links
 Version Control
-Visual Studio tips
+Visual Studio Tips
 Numerical Operation
 Image/Display 
 Platforms 
