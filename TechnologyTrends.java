@@ -32,16 +32,54 @@ public class TechnologyTrends {
 		hmTechImpactTopic = new HashMap<>();
 	}
 
+	void findRelDocIdInTags(String dataPath) throws IOException,
+			ClassNotFoundException {
+		String tagPathOriginal = dataPath + "\\" + "Tags";
+		String tagPathAnalysisFinal = dataPath + "\\" + "TagsDocIDsFinal";
+		Path dir = FileSystems.getDefault().getPath(tagPathOriginal);
+		DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+		long countTags = 1;
+		long countIds = 0;
+		for (Path path : stream) {
+			System.out.println("Tag no = " + countTags++ + " file name = "
+					+ path.getFileName());
+			// open the original tag file in read mode
+			File file = new File(tagPathOriginal + "\\" + path.getFileName());
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(
+					file));
+			// open the analysisFinal tag file in write mode
+			FileWriter fw = new FileWriter(tagPathAnalysisFinal + "\\"
+					+ path.getFileName());
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			String thisLine = null;
+			while ((thisLine = bufferedReader.readLine()) != null) {
+				int docId = Integer.parseInt(thisLine);
+				if (docId >= 20864411) {
+					countIds++;
+					bw.write(String.valueOf(docId));
+					bw.newLine();
+				}
+			}
+			bw.close();
+			bufferedReader.close();
+		}
+		stream.close();
+		System.out.println("Total relevant Ids found = " + countIds);
+	}
+
 	void identifyTags(String dataPath) throws IOException,
 			ClassNotFoundException, SQLException {
 		String topicTags = dataPath + "\\" + "TopicTags";
-		String tagPath = dataPath + "\\" + "Tags";
+		String tagPath = dataPath + "\\" + "TagsDocIDsFinal";
 		Path dir = FileSystems.getDefault().getPath(tagPath);
 		DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
 		long count = 1;
+		long countQuestionPostsNotFound = 0;
+		long countQuestionPostsFound = 0;
 
 		// database connection to QuestionTopic table
-		String url = "jdbc:mysql://localhost:3306/stackoverflow";
+		String url = "jdbc:mysql://localhost:3306/topicprobability";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 		String selectQuestion = "SELECT * FROM questiontopic WHERE Document_Id = ?";
@@ -50,7 +88,7 @@ public class TechnologyTrends {
 
 		for (Path path : stream) {
 			double cumTopic[] = new double[noTopics + 1];
-			System.out.println("no = " + count++ + " file = "
+			System.out.println("Tag no = " + count++ + " file name = "
 					+ path.getFileName());
 
 			// process the tag file
@@ -63,19 +101,23 @@ public class TechnologyTrends {
 				ps.setInt(1, docId);
 				ResultSet rs = ps.executeQuery();
 				if (!rs.next()) {
-					System.out.println("question post not present for: "
-							+ docId);
+					/*
+					 * System.out.println("question post not present for: " +
+					 * docId);
+					 */
+					countQuestionPostsNotFound++;
 					rs.close();
 					continue;
 				}
 				// rs.beforeFirst();
 
+				countQuestionPostsFound++;
 				for (int i = 3; i <= noTopics + 2; i++) {
 					Double topicValue = Double.parseDouble(rs.getString(i));
 					if (topicValue >= 0.1)
 						cumTopic[i - 2] += topicValue;
 				}
-
+				rs.close();
 			}
 			bufferedReader.close();
 
@@ -92,6 +134,8 @@ public class TechnologyTrends {
 				}
 			}
 		}
+		System.out.println("Question Posts Found = " + countQuestionPostsFound
+				+ "Question posts not found = " + countQuestionPostsNotFound);
 		stream.close();
 		ps.close();
 		con.close();
@@ -121,7 +165,6 @@ public class TechnologyTrends {
 					else
 						return -1;
 				}
-
 			});
 
 			FileWriter fw = new FileWriter(sortedTagsPath + "\\" + i);
@@ -140,7 +183,7 @@ public class TechnologyTrends {
 		String tagPath = dataPath + "\\" + "Tags";
 
 		// database connection to QuestionTopic table
-		String url = "jdbc:mysql://localhost:3306/stackoverflow";
+		String url = "jdbc:mysql://localhost:3306/topicprobability";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
@@ -150,6 +193,7 @@ public class TechnologyTrends {
 		PreparedStatement psTag = (PreparedStatement) con
 				.prepareStatement(selectQuestionForTags);
 		long seqNumber = 1;
+		long questPostsNotPresent = 0;
 		for (String tech : groupTags.keySet()) {
 			System.out.println("Building hmTechImpactTags, "
 					+ " sequence no = " + seqNumber++ + " tech name = " + tech);
@@ -165,8 +209,7 @@ public class TechnologyTrends {
 					psTag.setInt(1, docId);
 					ResultSet rs = psTag.executeQuery();
 					if (!rs.next()) {
-						System.out.println("question post not present for: "
-								+ docId);
+						questPostsNotPresent++;
 						rs.close();
 						continue;
 					}
@@ -184,22 +227,31 @@ public class TechnologyTrends {
 			}
 			hmTechImpactTags.put(tech, hm);
 		}
+		System.out.println("total question posts not present = "
+				+ questPostsNotPresent);
 		psTag.close();
 
 		// build hmTechImpactTopic
 		int noRows = 10000;
-		long iter = 0;
 		long start = 0;
+		long end = 20864410;
 		long count = 1;
 		while (true) {
+			long startTime = System.currentTimeMillis();
 			Statement st = con.createStatement(
 					java.sql.ResultSet.TYPE_FORWARD_ONLY,
 					java.sql.ResultSet.CONCUR_READ_ONLY);
 			st.setFetchSize(1000);
-			start = iter * noRows;
+			// start = iter * noRows;
+
+			// optimization
+			start = end + 1;
+			end = start + noRows - 1;
 			ResultSet rs = st.executeQuery("SELECT CreationMonth, topic"
-					+ topicNumber + " FROM questiontopic LIMIT " + start + ","
-					+ noRows);
+					+ topicNumber
+					+ " FROM questiontopic WHERE Document_Id BETWEEN " + start
+					+ " AND " + end);
+
 			if (!rs.next()) {
 				System.out.println("done with all the data");
 				st.close();
@@ -209,8 +261,7 @@ public class TechnologyTrends {
 			rs.beforeFirst();
 
 			while (rs.next()) {
-				System.out.println("Building hmTechImpactTopic, Sequence No = "
-						+ count++);
+				count++;
 				if (!hmTechImpactTopic.containsKey(rs.getString(1))) {
 					hmTechImpactTopic.put(rs.getString(1), 0.0);
 				}
@@ -221,7 +272,8 @@ public class TechnologyTrends {
 			}
 			rs.close();
 			st.close();
-			iter++;
+			System.out.println("Docs completed = " + count + ", Time taken = "
+					+ (System.currentTimeMillis() - startTime));
 		}
 		con.close();
 	}
@@ -232,8 +284,8 @@ public class TechnologyTrends {
 		technologyTrendsHelper(dataPath, topicNumber, groupTags);
 
 		// write technology trends to file
-		FileWriter fwTechnology = new FileWriter("TechnologyTrends"
-				+ topicNumber + ".txt");
+		FileWriter fwTechnology = new FileWriter(
+				"TechnologyTrends_AnalysisFinal" + topicNumber + ".txt");
 		BufferedWriter bwTechnology = new BufferedWriter(fwTechnology);
 		/*
 		 * bwTechnology.append("Technology topic number is : " +
@@ -280,29 +332,37 @@ public class TechnologyTrends {
 		 * hm.put("python", new ArrayList<>(Arrays.asList("python")));
 		 * hm.put("php", new ArrayList<>(Arrays.asList("php"))); hm.put("perl",
 		 * new ArrayList<>(Arrays.asList("perl"))); hm.put("ruby", new
-		 * ArrayList<>(Arrays.asList("ruby"))); hm.put("vbscript", new
-		 * ArrayList<>(Arrays.asList("vbscript")));
+		 * ArrayList<>(Arrays.asList("ruby"))); hm.put("unix-shell-script", new
+		 * ArrayList<>(Arrays.asList("ksh", "csh", "bash", "sh", "shell",
+		 * "unix")));
 		 */
 
-		hm.put("java", new ArrayList<>(Arrays.asList("java")));
-		hm.put("c++", new ArrayList<>(Arrays.asList("c++")));
-		hm.put("c#", new ArrayList<>(Arrays.asList("c#")));
-		hm.put("php", new ArrayList<>(Arrays.asList("php")));
-		hm.put("python", new ArrayList<>(Arrays.asList("python")));
-		hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
+		/*
+		 * hm.put("java", new ArrayList<>(Arrays.asList("java"))); hm.put("c++",
+		 * new ArrayList<>(Arrays.asList("c++"))); hm.put("c#", new
+		 * ArrayList<>(Arrays.asList("c#"))); hm.put("php", new
+		 * ArrayList<>(Arrays.asList("php"))); hm.put("python", new
+		 * ArrayList<>(Arrays.asList("python"))); hm.put("objective-c", new
+		 * ArrayList<>(Arrays.asList("objective-c")));
+		 */
+
+		/*
+		 * hm.put("r", new ArrayList<>(Arrays.asList("r"))); hm.put("python",
+		 * new ArrayList<>(Arrays.asList("python"))); hm.put("matlab", new
+		 * ArrayList<>(Arrays.asList("matlab"))); hm.put("java", new
+		 * ArrayList<>(Arrays.asList("java")));
+		 */
 
 		/*
 		 * hm.put("svn", new ArrayList<>(Arrays.asList("svn"))); hm.put("git",
-		 * new ArrayList<>(Arrays.asList("git"))); hm.put("clearcase", new
-		 * ArrayList<>(Arrays.asList("clearcase"))); hm.put("perforce", new
+		 * new ArrayList<>(Arrays.asList("git"))); hm.put("mercurial", new
+		 * ArrayList<>(Arrays.asList("mercurial"))); hm.put("perforce", new
 		 * ArrayList<>(Arrays.asList("perforce")));
 		 */
 
-		/*
-		 * hm.put("android", new ArrayList<>(Arrays.asList("android")));
-		 * hm.put("iphone", new ArrayList<>(Arrays.asList("iphone")));
-		 * hm.put("blackberry", new ArrayList<>(Arrays.asList("blackberry")));
-		 */
+		hm.put("android", new ArrayList<>(Arrays.asList("android")));
+		hm.put("iphone", new ArrayList<>(Arrays.asList("iphone", "ios")));
+		hm.put("windows-phone", new ArrayList<>(Arrays.asList("")));
 
 		/*
 		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
@@ -321,12 +381,10 @@ public class TechnologyTrends {
 		// search for the keywords of tech in the given topic
 		String topicTags = dataPath + "\\" + "TopicTags" + "\\" + topic;
 		HashMap<String, ArrayList<String>> groupTags = new HashMap<>();
-		groupTags.put("java", new ArrayList<String>());
-		groupTags.put("c++", new ArrayList<String>());
-		groupTags.put("c#", new ArrayList<String>());
-		groupTags.put("php", new ArrayList<String>());
-		groupTags.put("python", new ArrayList<String>());
-		groupTags.put("javascript", new ArrayList<String>());
+
+		groupTags.put("android", new ArrayList<String>());
+		groupTags.put("iphone", new ArrayList<String>());
+		groupTags.put("windows-phone", new ArrayList<String>());
 
 		File file = new File(topicTags);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -343,6 +401,33 @@ public class TechnologyTrends {
 										k.toLowerCase())) {
 							groupTags.get(tech).add(thisLine.split("\\s+")[0]);
 						}
+					}
+				} else if (tech.equals("r")) {
+					String s[] = thisLine.toLowerCase().split("\\s+");
+					if (s[0].trim().equals("r") || s[0].startsWith("r-")) {
+						groupTags.get(tech).add(s[0]);
+					}
+				} else if (tech.equals("git")) {
+					for (String k : keywords) {
+						if (!thisLine.toLowerCase().contains("digit")
+								&& thisLine.toLowerCase().contains(
+										k.toLowerCase())) {
+							groupTags.get(tech).add(thisLine.split("\\s+")[0]);
+						}
+					}
+				} else if (tech.equals("unix shell script")) {
+					for (String k : keywords) {
+						String s[] = thisLine.toLowerCase().split("\\s+");
+						if (s[0].trim().equals(k)) {
+							groupTags.get(tech).add(s[0]);
+						}
+					}
+				} else if (tech.equals("windows-phone")) {
+					String s[] = thisLine.toLowerCase().split("\\s+");
+					if ((s[0].contains("windows") && s[0].contains("phone"))
+							|| (s[0].contains("windows") && s[0]
+									.contains("phone"))) {
+						groupTags.get(tech).add(s[0]);
 					}
 				} else {
 					for (String k : keywords) {
@@ -367,12 +452,27 @@ public class TechnologyTrends {
 
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, SQLException {
+
 		TechnologyTrends technologyTrends = new TechnologyTrends(40);
-		// technologyTrends
-		// .identifyTags("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
-		// technologyTrends
-		// .sortTagsFrequencyPerTopic("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
+		/*
+		 * technologyTrends
+		 * .findRelDocIdInTags("G:\\Mallet\\Analysis_Final\\DataWithFileStructure"
+		 * );
+		 */
+		/*
+		 * technologyTrends
+		 * .identifyTags("G:\\Mallet\\Analysis_Final\\DataWithFileStructure");
+		 */
+
+		/*
+		 * technologyTrends .sortTagsFrequencyPerTopic(
+		 * "G:\\Mallet\\Analysis_Final\\DataWithFileStructure");
+		 */
+
+		// technologyTrends.buildTopicImpactPerMonth();
+		// technologyTrends.technologyTrends("", 0, null);
+
 		technologyTrends
-				.groupTagsCreateTrends("G:\\Mallet\\Analysis_May25\\DataWithFileStructure");
+				.groupTagsCreateTrends("G:\\Mallet\\Analysis_Final\\DataWithFileStructure");
 	}
 }
