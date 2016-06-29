@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public class TopicTrends {
 	int noTopics;
+	long countDocs;
 	HashMap<String, ArrayList<Double>> hmAnswer;
 	HashMap<String, ArrayList<Double>> hmQuestion;
 	HashMap<String, Long> noDocsAnswerPerMonth;
@@ -19,6 +20,7 @@ public class TopicTrends {
 
 	public TopicTrends(int noTopics) {
 		this.noTopics = noTopics;
+		this.countDocs = 0;
 		hmAnswer = new HashMap<>();
 		hmQuestion = new HashMap<>();
 		noDocsAnswerPerMonth = new HashMap<>();
@@ -27,22 +29,35 @@ public class TopicTrends {
 
 	void calculateTrendsAnswerPosts() throws ClassNotFoundException,
 			SQLException, IOException {
-		String url = "jdbc:mysql://localhost:3306/stackoverflow";
+		String url = "jdbc:mysql://localhost:3306/topicprobability";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
 		int noRows = 10000;
-		long iter = 0;
+		// long iter = 0;
 		long start = 0;
-		long count = 1;
+		long end = 20864408;
+		long countAnswer = 0;
 		while (true) {
+			long startTime = System.currentTimeMillis();
 			Statement st = con.createStatement(
 					java.sql.ResultSet.TYPE_FORWARD_ONLY,
 					java.sql.ResultSet.CONCUR_READ_ONLY);
 			st.setFetchSize(1000);
-			start = iter * noRows;
-			ResultSet rs = st.executeQuery("select * from answertopic LIMIT "
-					+ start + "," + noRows);
+
+			/*
+			 * start = iter * noRows; ResultSet rs =
+			 * st.executeQuery("select * from answertopic LIMIT " + start + ","
+			 * + noRows);
+			 */
+
+			// optimization
+			start = end + 1;
+			end = start + noRows - 1;
+			ResultSet rs = st
+					.executeQuery("select * from answertopic WHERE Document_Id BETWEEN "
+							+ start + " AND " + end);
+
 			if (!rs.next()) {
 				System.out.println("done with all the answer posts");
 				st.close();
@@ -52,8 +67,8 @@ public class TopicTrends {
 			rs.beforeFirst();
 
 			while (rs.next()) {
-				System.out.println("Answer Sequence No = " + count++
-						+ " and id = " + rs.getInt("Document_Id"));
+				countAnswer++;
+				countDocs++;
 				String creationMonth = rs.getString("CreationMonth");
 				if (!hmAnswer.containsKey(creationMonth)) {
 					ArrayList<Double> list = new ArrayList<>();
@@ -82,29 +97,46 @@ public class TopicTrends {
 			}
 			st.close();
 			rs.close();
-			iter++;
+			// iter++;
+			System.out.println("Answers completed = " + countAnswer
+					+ ", Docs completed = " + countDocs + ", Reached Index = "
+					+ end + ", Time taken = "
+					+ (System.currentTimeMillis() - startTime));
 		}
 		con.close();
 	}
 
 	void calculateTrendsQuestionPosts() throws ClassNotFoundException,
 			SQLException, IOException {
-		String url = "jdbc:mysql://localhost:3306/stackoverflow";
+		String url = "jdbc:mysql://localhost:3306/topicprobability";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 
 		int noRows = 10000;
-		long iter = 0;
+		// long iter = 0;
 		long start = 0;
-		long count = 1;
+		long end = 20864410;
+		long countQuestion = 0;
 		while (true) {
+			long startTime = System.currentTimeMillis();
 			Statement st = con.createStatement(
 					java.sql.ResultSet.TYPE_FORWARD_ONLY,
 					java.sql.ResultSet.CONCUR_READ_ONLY);
 			st.setFetchSize(1000);
-			start = iter * noRows;
-			ResultSet rs = st.executeQuery("select * from questiontopic LIMIT "
-					+ start + "," + noRows);
+
+			/*
+			 * start = iter * noRows; ResultSet rs =
+			 * st.executeQuery("select * from questiontopic LIMIT " + start +
+			 * "," + noRows);
+			 */
+
+			// optimization
+			start = end + 1;
+			end = start + noRows - 1;
+			ResultSet rs = st
+					.executeQuery("select * from questiontopic WHERE Document_Id BETWEEN "
+							+ start + " AND " + end);
+
 			if (!rs.next()) {
 				System.out.println("done with all the question posts");
 				st.close();
@@ -114,8 +146,8 @@ public class TopicTrends {
 			rs.beforeFirst();
 
 			while (rs.next()) {
-				System.out.println("Question Sequence No = " + count++
-						+ " and id = " + rs.getInt("Document_Id"));
+				countQuestion++;
+				countDocs++;
 				String creationMonth = rs.getString("CreationMonth");
 				if (!hmQuestion.containsKey(creationMonth)) {
 					ArrayList<Double> list = new ArrayList<>();
@@ -144,14 +176,18 @@ public class TopicTrends {
 			}
 			st.close();
 			rs.close();
-			iter++;
+			// iter++;
+			System.out.println("Questions completed = " + countQuestion
+					+ ", Docs completed = " + countDocs + ", Reached Index = "
+					+ end + ", Time taken = "
+					+ (System.currentTimeMillis() - startTime));
 		}
 		con.close();
 	}
 
 	void writeResultofTends() throws IOException {
 		// answer trends
-		FileWriter fwAnswer = new FileWriter("AnswerTopicTrends.txt");
+		FileWriter fwAnswer = new FileWriter("AnswerTopicTrends_AnalysisFinal.txt");
 		BufferedWriter bwAnswer = new BufferedWriter(fwAnswer);
 		// logic to get year-month in ascending order
 		ArrayList<String> alAnswer = new ArrayList<>(hmAnswer.keySet());
@@ -172,7 +208,7 @@ public class TopicTrends {
 		bwAnswer.close();
 
 		// question trends
-		FileWriter fwQuestion = new FileWriter("QuestionTopicTrends.txt");
+		FileWriter fwQuestion = new FileWriter("QuestionTopicTrends_AnalysisFinal.txt");
 		BufferedWriter bwQuestion = new BufferedWriter(fwQuestion);
 		// logic to get year-month in ascending order
 		ArrayList<String> alQuestion = new ArrayList<>(hmQuestion.keySet());
@@ -193,7 +229,7 @@ public class TopicTrends {
 		bwQuestion.close();
 
 		// combined trends
-		FileWriter fwCombined = new FileWriter("CombinedTopicTrends.txt");
+		FileWriter fwCombined = new FileWriter("CombinedTopicTrends_AnalysisFinal.txt");
 		BufferedWriter bwCombined = new BufferedWriter(fwCombined);
 		for (String str : alQuestion) {
 			bwCombined.write("YearMonth: " + str);
