@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import com.mysql.jdbc.PreparedStatement;
 
 public class TopicRelationship {
@@ -21,7 +22,7 @@ public class TopicRelationship {
 
 	void calculateRelationship() throws ClassNotFoundException, SQLException,
 			IOException {
-		String url = "jdbc:mysql://localhost:3306/stackoverflow";
+		String url = "jdbc:mysql://localhost:3306/topicprobability";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(url, "root", "root");
 		String selectQuestion = "SELECT * FROM questiontopic WHERE Document_Id = ?";
@@ -29,17 +30,30 @@ public class TopicRelationship {
 				.prepareStatement(selectQuestion);
 
 		int noRows = 10000;
-		long iter = 0;
+		// long iter = 0;
 		long start = 0;
-		long count = 1;
+		long end = 20864408;
+		long countDocuments = 0;
+		long countQuesNotFound = 0;
 		while (true) {
+			long startTime = System.currentTimeMillis();
 			Statement st = con.createStatement(
 					java.sql.ResultSet.TYPE_FORWARD_ONLY,
 					java.sql.ResultSet.CONCUR_READ_ONLY);
 			st.setFetchSize(1000);
-			start = iter * noRows;
-			ResultSet rs = st.executeQuery("select * from answertopic LIMIT "
-					+ start + "," + noRows);
+			/*
+			 * start = iter * noRows; ResultSet rs =
+			 * st.executeQuery("select * from answertopic LIMIT " + start + ","
+			 * + noRows);
+			 */
+
+			// optimization
+			start = end + 1;
+			end = start + noRows - 1;
+			ResultSet rs = st
+					.executeQuery("select * from answertopic WHERE Document_Id BETWEEN "
+							+ start + " AND " + end);
+
 			if (!rs.next()) {
 				System.out.println("done with all the data");
 				st.close();
@@ -49,19 +63,25 @@ public class TopicRelationship {
 			rs.beforeFirst();
 
 			while (rs.next()) {
-				System.out.println("Sequence No = " + count++ + " and id = "
-						+ rs.getInt("Document_Id"));
+				countDocuments++;
+				/*
+				 * System.out.println("Sequence No = " + count++ + " and id = "
+				 * + rs.getInt("Document_Id"));
+				 */
 
 				int parent = rs.getInt("Parent_Id");
 				ps.setInt(1, parent);
 				ResultSet rq = ps.executeQuery();
 				if (!rq.next()) {
-					System.out.println("question post not present for: "
-							+ rs.getInt("Document_Id"));
+					countQuesNotFound++;
+					/*
+					 * System.out.println("question post not present for: " +
+					 * rs.getInt("Document_Id"));
+					 */
 					rq.close();
 					continue;
 				}
-				//rq.beforeFirst();
+				// rq.beforeFirst();
 
 				int topicNumber = 0;
 				for (int qc = 3; qc <= noTopics + 2; qc++) {
@@ -88,9 +108,13 @@ public class TopicRelationship {
 				}
 				rq.close();
 			}
+			System.out.println("Documents completed = " + countDocuments
+					+ ", Question not found = " + countQuesNotFound
+					+ ", Reached Index = " + end + ", Time taken = "
+					+ (System.currentTimeMillis() - startTime));
 			st.close();
 			rs.close();
-			iter++;
+			// iter++;
 		}
 		ps.close();
 		con.close();
@@ -99,7 +123,6 @@ public class TopicRelationship {
 	void writeRelationship(String fileName) throws IOException {
 		FileWriter fw = new FileWriter(fileName);
 		BufferedWriter bw = new BufferedWriter(fw);
-
 		for (int i = 1; i <= noTopics; i++) {
 			bw.write("Topic: " + i);
 			bw.newLine();
@@ -117,6 +140,6 @@ public class TopicRelationship {
 			SQLException, IOException {
 		TopicRelationship tr = new TopicRelationship(40);
 		tr.calculateRelationship();
-		tr.writeRelationship("TopicRelationship.txt");
+		tr.writeRelationship("TopicRelationship_AnalysisFinal.txt");
 	}
 }
