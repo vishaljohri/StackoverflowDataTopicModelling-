@@ -28,8 +28,9 @@ public class TopicSpread {
 					cumTopicSpread[i]++;
 				}
 			}
-			System.out.println(thisLine);
+			// System.out.println(thisLine);
 			noDocs++;
+			System.out.println("Docs completed = " + noDocs);
 		}
 		bufferedReader.close();
 	}
@@ -40,7 +41,7 @@ public class TopicSpread {
 		}
 
 		// write output
-		File fileOutput = new File("TopicSpreadPerDocument.txt");
+		File fileOutput = new File("TopicSpreadPerDocument_AnalysisFinal.txt");
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 				fileOutput));
 		for (int i = 0; i < noTopics; i++) {
@@ -52,7 +53,7 @@ public class TopicSpread {
 
 	public static void main(String[] args) throws IOException {
 		TopicSpread ts = new TopicSpread(40);
-		ts.calcTopicSpread("topic-docs-May-26");
+		ts.calcTopicSpread("G:\\Mallet\\Analysis_Final\\topic-docs-analysis-final");
 		ts.writeResults();
 	}
 }

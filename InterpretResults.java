@@ -29,7 +29,7 @@ public class InterpretResults {
 	void interpretTopicShare(String fileName) throws IOException {
 		File file = new File(fileName);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		FileWriter fw = new FileWriter("InterpretedTopicShare.txt");
+		FileWriter fw = new FileWriter("InterpretedTopicShare_AnalysisFinal.txt");
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		String thisLine = null;
@@ -48,7 +48,7 @@ public class InterpretResults {
 	void interpretTopicSpread(String fileName) throws IOException {
 		File file = new File(fileName);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		FileWriter fw = new FileWriter("InterpretedTopicSpreadPerDocument.txt");
+		FileWriter fw = new FileWriter("InterpretedTopicSpreadPerDocument_AnalysisFinal.txt");
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		String thisLine = null;
@@ -67,7 +67,7 @@ public class InterpretResults {
 	void interpretTopicRelationship(String fileName) throws IOException {
 		File file = new File(fileName);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-		FileWriter fw = new FileWriter("InterpretedTopicRelationship.txt");
+		FileWriter fw = new FileWriter("InterpretedTopicRelationship_AnalysisFinal.txt");
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		String thisLine = null;
@@ -103,9 +103,9 @@ public class InterpretResults {
 
 	public static void main(String[] args) throws IOException {
 		InterpretResults ir = new InterpretResults(40);
-		ir.readTopics("TopicNames.txt");
-		ir.interpretTopicShare("TopicShareAcrossTopics.txt");
-		ir.interpretTopicSpread("TopicSpreadPerDocument.txt");
-		ir.interpretTopicRelationship("TopicRelationship.txt");
+		ir.readTopics("TopicNamesAnalysisFinal.txt");
+		ir.interpretTopicShare("TopicShareAcrossTopics_AnalysisFinal.txt");
+		ir.interpretTopicSpread("TopicSpreadPerDocument_AnalysisFinal.txt");
+		ir.interpretTopicRelationship("TopicRelationship_AnalysisFinal.txt");
 	}
 }

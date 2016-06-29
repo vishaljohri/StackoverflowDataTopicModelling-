@@ -20,11 +20,11 @@ public class LoadTopicPropToSQLOptimized {
 
 		// create separate files for answers and questions
 		// answer posts
-		FileWriter fwAnswer = new FileWriter("Answer_Topic_Prob_Document.txt");
+		FileWriter fwAnswer = new FileWriter("Answer_Topic_Prob_Document_AnalysisFinal.txt");
 		BufferedWriter bwAnswer = new BufferedWriter(fwAnswer);
 		// question posts
 		FileWriter fwQuestion = new FileWriter(
-				"Question_Topic_Prob_Document.txt");
+				"Question_Topic_Prob_Document_AnalysisFinal.txt");
 		BufferedWriter bwQuestion = new BufferedWriter(fwQuestion);
 
 		File file = new File(fileName);
@@ -103,7 +103,7 @@ public class LoadTopicPropToSQLOptimized {
 	public static void main(String[] args) throws IOException,
 			ClassNotFoundException, SQLException {
 		LoadTopicPropToSQLOptimized lt = new LoadTopicPropToSQLOptimized(40);
-		lt.createSeparateFilesToLoad("topic-docs-May-26");
+		lt.createSeparateFilesToLoad("G:\\Mallet\\Analysis_Final\\topic-docs-analysis-final");
 		lt.createSchemaOfTables();
 	}
 }

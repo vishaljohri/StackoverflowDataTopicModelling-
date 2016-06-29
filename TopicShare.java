@@ -26,16 +26,17 @@ public class TopicShare {
 				for (int i = 0; i < noTopics; i++) {
 					double val = Double.parseDouble(str[i + 2]);
 					if (val >= 0.10) {
-						topicShare[i] = val;
+						topicShare[i] = topicShare[i] + val;
 					}
 				}
-				System.out.println(thisLine);
+				// System.out.println(thisLine);
 				noDocs++;
+				System.out.println("Docs completeted = " + noDocs);
 			}
 			bufferedReader.close();
 
 			// write output
-			File fileOutput = new File("Topic_Aggregate.txt");
+			File fileOutput = new File("TopicAggregate_AnalysisFinal.txt");
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					fileOutput));
 			for (int i = 0; i < noTopics; i++) {
@@ -54,7 +55,7 @@ public class TopicShare {
 		}
 		// write output
 		try {
-			File fileOutput = new File("TopicSharePerDocument.txt");
+			File fileOutput = new File("TopicSharePerDocument_AnalysisFinal.txt");
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					fileOutput));
 			for (int i = 0; i < noTopics; i++) {
@@ -74,7 +75,7 @@ public class TopicShare {
 			sum += topicShare[i];
 		}
 		try {
-			File fileOutput = new File("TopicShareAcrossTopics.txt");
+			File fileOutput = new File("TopicShareAcrossTopics_AnalysisFinal.txt");
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(
 					fileOutput));
 			for (int i = 0; i < noTopics; i++) {
@@ -91,7 +92,7 @@ public class TopicShare {
 
 	public static void main(String[] args) {
 		TopicShare ts = new TopicShare(40);
-		ts.calcTopicAggregate("topic-docs-May-26");
+		ts.calcTopicAggregate("G:\\Mallet\\Analysis_Final\\topic-docs-analysis-final");
 		ts.calTopicSharePerDocument();
 		ts.calcTopicShareAcrossTopics();
 	}
