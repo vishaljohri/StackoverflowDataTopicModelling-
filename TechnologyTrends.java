@@ -285,7 +285,7 @@ public class TechnologyTrends {
 
 		// write technology trends to file
 		FileWriter fwTechnology = new FileWriter(
-				"TechnologyTrends_AnalysisFinal" + topicNumber + ".txt");
+				"TechnologyTrends_AnalysisFinalGeneralScripts" + topicNumber + ".txt");
 		BufferedWriter bwTechnology = new BufferedWriter(fwTechnology);
 		/*
 		 * bwTechnology.append("Technology topic number is : " +
@@ -323,19 +323,18 @@ public class TechnologyTrends {
 			ClassNotFoundException, SQLException {
 
 		// give topic number for trends
-		int topic = 8;
+		int topic = 27;
 		// create map for tech name and corresponding keywords
 		HashMap<String, ArrayList<String>> hm = new HashMap<>();
 
-		/*
-		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
-		 * hm.put("python", new ArrayList<>(Arrays.asList("python")));
-		 * hm.put("php", new ArrayList<>(Arrays.asList("php"))); hm.put("perl",
-		 * new ArrayList<>(Arrays.asList("perl"))); hm.put("ruby", new
-		 * ArrayList<>(Arrays.asList("ruby"))); hm.put("unix-shell-script", new
-		 * ArrayList<>(Arrays.asList("ksh", "csh", "bash", "sh", "shell",
-		 * "unix")));
-		 */
+		hm.put("python", new ArrayList<>(Arrays.asList("python")));
+		hm.put("perl", new ArrayList<>(Arrays.asList("perl")));
+		hm.put("ruby", new ArrayList<>(Arrays.asList("ruby")));
+		hm.put("unix-shell-script",
+				new ArrayList<>(Arrays.asList("ksh", "csh", "tcsh", "bash", "git-bash", 
+						".bash-profile", "bash-completion", "shellshock-bash-bug", "bash4", "bash-function",
+						"sh", "zsh", "ksh", "oh-my-zsh",
+						"shell", "shell-exec", "shellexecute", "shellcode", "gnome-shell", "unix")));
 
 		/*
 		 * hm.put("java", new ArrayList<>(Arrays.asList("java"))); hm.put("c++",
@@ -360,31 +359,47 @@ public class TechnologyTrends {
 		 * ArrayList<>(Arrays.asList("perforce")));
 		 */
 
-		hm.put("android", new ArrayList<>(Arrays.asList("android")));
-		hm.put("iphone", new ArrayList<>(Arrays.asList("iphone", "ios")));
-		hm.put("windows-phone", new ArrayList<>(Arrays.asList("")));
+		/*
+		 * hm.put("android", new ArrayList<>(Arrays.asList("android")));
+		 * hm.put("iphone", new ArrayList<>(Arrays.asList("iphone", "ios")));
+		 * hm.put("windows-phone", new ArrayList<>(Arrays.asList("")));
+		 */
 
 		/*
 		 * hm.put("javascript", new ArrayList<>(Arrays.asList("javascript")));
 		 * hm.put("jquery", new ArrayList<>(Arrays.asList("jquery")));
 		 * hm.put("php", new ArrayList<>(Arrays.asList("php")));
-		 * hm.put("asp.net", new ArrayList<>(Arrays.asList("asp.net")));
+		 * hm.put("html/css", new ArrayList<>(Arrays.asList("html", "css")));
 		 */
 
 		/*
 		 * hm.put("mysql", new ArrayList<>(Arrays.asList("mysql")));
-		 * hm.put("postgresql", new ArrayList<>(Arrays.asList("postgresql")));
+		 * hm.put("postgresql", new ArrayList<>(Arrays.asList("postgres")));
 		 * hm.put("oracle", new ArrayList<>(Arrays.asList("oracle")));
-		 * hm.put("sqlite", new ArrayList<>(Arrays.asList("sqlite")));
+		 * hm.put("mongodb", new ArrayList<>(Arrays.asList("mongo")));
+		 * hm.put("sql-server", new ArrayList<>(Arrays.asList("sql-server")));
 		 */
+
+		/*
+		 * hm.put("angularjs", new ArrayList<>(Arrays.asList("angularjs")));
+		 * hm.put("ruby-on-rails", new ArrayList<>(Arrays.asList("ruby")));
+		 * hm.put("asp.net", new ArrayList<>(Arrays.asList("asp.net")));
+		 * hm.put("django", new ArrayList<>(Arrays.asList("django")));
+		 */
+		
+		/*hm.put("google-chrome", new ArrayList<>(Arrays.asList("google-chrome")));
+		hm.put("firefox", new ArrayList<>(Arrays.asList("firefox", "mozilla")));
+		hm.put("internet-explorer", new ArrayList<>(Arrays.asList("internet-explorer")));
+		hm.put("safari", new ArrayList<>(Arrays.asList("safari")));*/
 
 		// search for the keywords of tech in the given topic
 		String topicTags = dataPath + "\\" + "TopicTags" + "\\" + topic;
 		HashMap<String, ArrayList<String>> groupTags = new HashMap<>();
 
-		groupTags.put("android", new ArrayList<String>());
-		groupTags.put("iphone", new ArrayList<String>());
-		groupTags.put("windows-phone", new ArrayList<String>());
+		groupTags.put("python", new ArrayList<String>());
+		groupTags.put("perl", new ArrayList<String>());
+		groupTags.put("ruby", new ArrayList<String>());
+		groupTags.put("unix-shell-script", new ArrayList<String>());
 
 		File file = new File(topicTags);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -415,7 +430,7 @@ public class TechnologyTrends {
 							groupTags.get(tech).add(thisLine.split("\\s+")[0]);
 						}
 					}
-				} else if (tech.equals("unix shell script")) {
+				} else if (tech.equals("unix-shell-script")) {
 					for (String k : keywords) {
 						String s[] = thisLine.toLowerCase().split("\\s+");
 						if (s[0].trim().equals(k)) {

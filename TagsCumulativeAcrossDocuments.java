@@ -23,6 +23,7 @@ public class TagsCumulativeAcrossDocuments {
 
 		// process the topic files
 		for (int i = 1; i <= noTopics; i++) {
+			System.out.println("Processing topic number : " + i);
 			File file = new File(path + "\\" + i);
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(
 					file));
@@ -57,7 +58,7 @@ public class TagsCumulativeAcrossDocuments {
 
 		// write results to output file
 		FileWriter fileWriter = new FileWriter(
-				"TagsCumulativeAcrossDocuments.txt");
+				"TagsCumulativeAcrossDocuments_AnalysisFinal.txt");
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 		for (Map.Entry<String, Double> el : list) {
 			bufferedWriter.write(el.getKey() + " " + el.getValue());
@@ -68,6 +69,6 @@ public class TagsCumulativeAcrossDocuments {
 
 	public static void main(String[] args) throws IOException {
 		TagsCumulativeAcrossDocuments t = new TagsCumulativeAcrossDocuments(40);
-		t.calcCumulative("G:\\Mallet\\Analysis_May25\\DataWithFileStructure\\TopicTags");
+		t.calcCumulative("G:\\Mallet\\Analysis_Final\\DataWithFileStructure\\TopicTags");
 	}
 }
