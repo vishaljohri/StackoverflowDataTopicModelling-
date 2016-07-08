@@ -44,7 +44,7 @@ index = 1;
 noTopics <- 40
 
 # read contents of input file
-fileName <- "CombinedTopicTrends.txt"
+fileName <- "CombinedTopicTrends_AnalysisFinal.txt"
 conn <- file(fileName, open = "r")
 line <- readLines(conn)
 for(i in 1 : length(line)) {
@@ -69,7 +69,7 @@ reqdData = m[1:length(yearMonth), 2:cols]
 # reqdData = m[1:length(yearMonth), 37:cols]
 
 # get all topic names
-fileNameTopicNames <- "TopicNames.txt"
+fileNameTopicNames <- "TopicNamesAnalysisFinal.txt"
 connTopicNames <- file(fileNameTopicNames,open="r")
 topicNames <- readLines(connTopicNames)
 close(connTopicNames)

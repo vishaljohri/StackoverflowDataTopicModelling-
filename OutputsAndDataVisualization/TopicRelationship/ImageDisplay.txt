@@ -1,0 +1,5 @@
+Image/Display, 12709.31869884119
+Styling/Rendering, 4011.0534472992777
+Website Design/CSS, 3927.0373891117924
+Data Analysis/Visualization, 3217.0413870724906
+UI Development, 2475.9521270992386

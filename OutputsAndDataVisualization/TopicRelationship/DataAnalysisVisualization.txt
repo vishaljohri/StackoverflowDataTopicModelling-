@@ -1,0 +1,5 @@
+Data Analysis/Visualization, 14708.572491672658
+Data Structure/Algorithm, 2327.543278832124
+Numerical Operation, 2317.648392286055
+Performance/Optimization, 1707.2090490813364
+SQL, 1702.8724612606563

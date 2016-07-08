@@ -1,0 +1,5 @@
+Scripting Language, 12971.91097938229
+File Operation, 2992.638382016811
+Compile/Build, 2486.814733681179
+Version Control, 2336.8464926966394
+Regular Expression, 2317.609568497692

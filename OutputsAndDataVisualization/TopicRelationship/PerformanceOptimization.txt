@@ -1,0 +1,5 @@
+Performance/Optimization, 7179.435730311728
+Analyze/Improve Approach, 1731.7547890970557
+Thread/Process, 1660.1200244057643
+Memory/Pointer, 1605.7211156887033
+Coding Style/Practice, 1535.291258660786

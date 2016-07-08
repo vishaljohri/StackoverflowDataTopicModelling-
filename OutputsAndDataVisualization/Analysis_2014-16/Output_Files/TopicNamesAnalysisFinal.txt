@@ -1,0 +1,40 @@
+Client/Server
+Image/Display
+File Operation
+Coding Style/Practice
+XML
+Numerical Operation
+Data Analysis/Visualization
+Mobile App Development
+OOP
+Web Development
+Text-related
+Compile/Build
+Memory/Pointer
+Java
+Regular Expression
+Code Snippet
+Styling/Rendering
+Web Service/Application
+Networking
+Thread/Process
+Function
+UI Development
+User Interaction
+Data Structure/Algorithm
+Authentication/Security
+Problem/Solution
+Scripting Language
+Website Design/CSS
+Testing
+Error/Exception
+Database Platform
+Date/Time
+Web Framework
+QA and Links
+SQL
+Item Ordering
+Version Control
+Analyze/Improve Approach
+Event Handling
+Performance/Optimization

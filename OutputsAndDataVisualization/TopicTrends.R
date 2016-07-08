@@ -5,7 +5,7 @@ dataNumeric = c()
 index = 1;
 
 # read contents of input file
-fileName <- "CombinedTopicTrends.txt"
+fileName <- "CombinedTopicTrends_AnalysisFinal.txt"
 conn <- file(fileName, open = "r")
 line <- readLines(conn)
 for(i in 1 : length(line)) {
@@ -30,10 +30,10 @@ for(i in 1 : length(yearMonth)) {
 # reqdData = m[1:length(yearMonth), 37:cols]
 
 # give topicNo + 1 in c(...)
-reqdData = m[1:length(yearMonth), c(7, 19, 20, 27, 39)]
+reqdData = m[1:length(yearMonth), c(5, 10, 16, 18, 39)]
 
 # get all topic names
-fileNameTopicNames <- "TopicNames.txt"
+fileNameTopicNames <- "TopicNamesAnalysisFinal.txt"
 connTopicNames <- file(fileNameTopicNames,open="r")
 topicNames <- readLines(connTopicNames)
 close(connTopicNames)
@@ -41,7 +41,7 @@ close(connTopicNames)
 # colnames(reqdData) <- c(topicNames[36:40])
 
 # give topic numbers in c(topicNames[i])
-colnames(reqdData) <- c( topicNames[6], topicNames[18], topicNames[19], topicNames[26], topicNames[38])
+colnames(reqdData) <- c(topicNames[4], topicNames[9], topicNames[15], topicNames[17], topicNames[38])
 
 df <- as.data.frame(reqdData, stringsAsFactors=FALSE)
 dfs <- stack(df)
@@ -50,4 +50,6 @@ colnames(dfs) <- c("Proportion", "Topic", "Time")
 f <- factor(dfs[,1])
 f <- as.numeric(as.character(f))
 dfs[,1] <- f
-ggplot(dfs, aes(Time, Proportion, colour = Topic, group = Topic)) + geom_line(size = 1) +  ggtitle("Top Decreasing Topic Trends") + labs(x = "Time", y = "Topic Impact") 
+# breakPoints <- c("Jan 2014", "", "", "Apr 2014", "", "", "Jul 2014", "", "", "Oct 2014", "", "", "Jan 2015", "", "", "Apr 2015", "", "", "Jul 2015", "", "", "Oct 2015", "", "")
+breakPoints <- c("Jan 2014", "Apr 2014", "Jul 2014", "Oct 2014", "Jan 2015", "Apr 2015", "Jul 2015", "Oct 2015")
+ggplot(dfs, aes(Time, Proportion, colour = Topic, group = Topic)) + geom_line(size = 1) +  ggtitle("Top Decreasing Topic Trends") + labs(x = "Time", y = "Topic Impact") + scale_x_discrete(breaks = unique(dfs$Time)[seq(1,24,3)], labels = breakPoints) + theme(plot.title = element_text(face="bold")) # + scale_y_continuous(limits = c(0.022, 0.026)) # + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))

@@ -1,0 +1,5 @@
+Web Development, 10135.408465301814
+Website Design/CSS, 5880.476076017628
+Event Handling, 3200.9108876264604
+Client/Server, 3037.460760060023
+Styling/Rendering, 2615.97512067903

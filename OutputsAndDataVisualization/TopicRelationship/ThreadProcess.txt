@@ -1,0 +1,5 @@
+Thread/Process, 11837.800495469652
+Analyze/Improve Approach, 2049.468156623322
+Event Handling, 1830.981633601595
+Performance/Optimization, 1626.5689434347455
+OOP, 1623.6203197374564
